@@ -10,10 +10,20 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: content_content
+  properties:
+  - name: __key__
+    direction: desc
+
 - kind: cspreports_cspreport
   properties:
   - name: created
     direction: desc
+  - name: __key__
+    direction: desc
+
+- kind: djangae_gaedatastoreuser
+  properties:
   - name: __key__
     direction: desc
 
