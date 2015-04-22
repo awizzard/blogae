@@ -31,7 +31,7 @@ urlpatterns = patterns('',
     ),
     url(
         regex=r'^(?P<slug>[\w-]+)/reveal/$',
-        view=views.PostHideView.as_view(),
+        view=views.PostRevealView.as_view(),
         name="reveal",
     ),
     url(

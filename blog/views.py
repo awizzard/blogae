@@ -160,3 +160,14 @@ class PostHideView(RedirectView):
         post.active = False
         post.save()
         return post.get_absolute_url()
+
+
+class PostRevealView(RedirectView):
+
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(models.Post, slug=self.kwargs['slug'])
+        post.active = True
+        post.save()
+        return post.get_absolute_url()

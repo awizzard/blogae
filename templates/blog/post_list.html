@@ -16,9 +16,8 @@
           <a class="btn btn-lg btn-success" href="{% url 'new_post' %}" role="button">Create New Post</a>
           <a class="btn btn-lg btn-success" href="{% url 'home' %}" role="button">View All Posts</a>
           </p>
-      </div>
-
-    <div class="row marketing">
+              <div class="row marketing">
+    <hr>          
     {% for post in object_list %}
       {% if user.is_staff or post.active %}
         <div class="col-lg">
@@ -28,7 +27,11 @@
           <p>{{ post.content|linebreaks }}</p>
         </div>
         {% endif %}
+        <br>
     {% endfor %}
     </div>
+
+      </div>
+
 
 {% endblock %}
