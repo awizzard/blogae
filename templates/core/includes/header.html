@@ -1,13 +1,13 @@
   <div class="header">
     <ul class="nav nav-pills pull-right">
-      <li class="active"><a href="#">Home</a></li>
-      {% if request.user.is_authenticated %}
-        <li><a href="{% url 'author' author=request.user.username %}">My Posts</a></li>
-        <li><a href="#">Logout</a></li>
+      <li class="active"><a href="{% url 'home' %}">Home</a></li>
+      {% if guser %}
+        <li><a href="{% url 'author' author=guser.email %}">My Posts</a></li>
+        <li><a href="{{ logout_url }}">Logout</a></li>
       {% else %}
-        <li><a href="#">Register</a></li>
-        <li><a href="#">Login</a></li>
+        <li><a href="{{ login_url }}">Login</a></li>
+        <li><a href="#">FAQ</a></li>
       {% endif %}
     </ul>
-    <h3 class="text-muted">Forum Post Thing</h3>
+    <h3 class="text-muted">The Blogae</h3>
   </div>

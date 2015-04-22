@@ -101,7 +101,7 @@ ROOT_URLCONF = 'scaffold.urls'
 
 WSGI_APPLICATION = 'scaffold.wsgi.application'
 
-
+LOGIN_URL = '/_ah/login/'
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 

@@ -19,6 +19,13 @@ indexes:
 - kind: blog_post
   properties:
   - name: _idx_icontains_title_0
+  - name: author_id
+  - name: created
+    direction: desc
+
+- kind: blog_post
+  properties:
+  - name: _idx_icontains_title_0
   - name: created
     direction: desc
 

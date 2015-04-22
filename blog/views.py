@@ -11,6 +11,8 @@ from core import views as core_views
 from . import models
 from . import forms
 
+from google.appengine.api import users
+
 
 class PostListView(
     core_views.ContextVariableMixin,
@@ -24,6 +26,26 @@ class PostListView(
     }
     context_head = "All Posts"
     context_lead = "Some posts will be found below. Eventually."
+    
+    @property 
+    def context_logout_url(self):
+        return users.create_logout_url(reverse('home'))
+    
+    @property 
+    def context_login_url(self):
+        return users.create_login_url(reverse('home'))
+
+    @property
+    def context_guser(self):
+        return users.get_current_user()
+    
+    @property 
+    def context_head(self):
+        q = self.request.GET.get("q")
+        if q:
+            return "Posts containing `{q}`".format(q=q)
+        else:
+            return "All Posts"
 
 
 class PostDetailView(DetailView):
@@ -73,6 +95,9 @@ class PostCreateView(
     def form_valid(self, form):
         return super(PostCreateView, self).form_valid(form)
 
+    def get_login_url(self):
+        return users.create_login_url(reverse('new_post'))
+
 
 class PostUpdateView(
     LoginRequiredMixin, 
@@ -91,24 +116,39 @@ class PostUpdateView(
         context['title'] = "Edit Post"
         return context
 
+    def get_login_url(self):
+        return users.create_login_url(
+            reverse(
+                'edit', 
+                kwargs={'slug': self.kwargs['slug']}
+            )
+        )
+
 
 class AuthoredView(PostListView):
 
+    term_mapping = {
+        "title": "icontains",
+    }
+
     def get_context_data(self, **kwargs):
+        q = self.request.GET.get("q")
         context = super(AuthoredView, self).get_context_data(**kwargs)
         context['head'] = "Posts by {}".format(self.kwargs['author'])
-        context['lead'] = "All posts created by {}.".format(
-            self.kwargs['author']
+        context['lead'] = "Posts created by {}{}.".format(
+            self.kwargs['author'],
+            " matching `{}`".format(q) if q else '' 
         )
         return context
 
     def get_queryset(self):
+        qs = super(AuthoredView, self).get_queryset()
         from django.db.models import get_model
         author = get_object_or_404(
             get_model(settings.AUTH_USER_MODEL), 
             email=self.kwargs['author']
         )
-        return self.model.objects.filter(author=author)
+        return qs.filter(author=author)
 
 
 class PostHideView(RedirectView):

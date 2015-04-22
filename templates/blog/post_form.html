@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}New Forum Post{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
 <link href="{{ STATIC_URL }}css/signin.css" rel="stylesheet">
@@ -9,11 +9,7 @@
 
         <form class="form-signin" role="form" action="" method="post">{% csrf_token %}
         <h2 class="form-signin-heading">
-        {% if previous %}
-            Reply to <a href="{{ previous.get_absolute_url }}" target="blank">{{ previous }}</a>
-        {% else %}
             {{ title }}
-        {% endif %}
         </h2>
             {% for field in form %}
             {{ field }}
