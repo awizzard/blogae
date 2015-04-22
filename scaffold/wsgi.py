@@ -15,9 +15,9 @@ from django.core.wsgi import get_wsgi_application
 from djangae.wsgi import DjangaeApplication
 from djangae.utils import on_production
 
-settings = "scaffold.settings_live" if on_production() else "scaffold.settings"
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings)
 
+settings = "scaffold.settings.production" if on_production() else "scaffold.settings.dev"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings)
 
 
 application = DjangaeApplication(get_wsgi_application())

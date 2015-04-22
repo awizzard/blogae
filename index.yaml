@@ -10,6 +10,36 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: blog_post
+  properties:
+  - name: _idx_contains_title_0
+  - name: created
+    direction: desc
+
+- kind: blog_post
+  properties:
+  - name: _idx_icontains_title_0
+  - name: created
+    direction: desc
+
+- kind: blog_post
+  properties:
+  - name: _idx_iexact_title
+  - name: created
+    direction: desc
+
+- kind: blog_post
+  properties:
+  - name: author_id
+  - name: created
+    direction: desc
+
+- kind: blog_post
+  properties:
+  - name: title
+  - name: created
+    direction: desc
+
 - kind: content_content
   properties:
   - name: __key__
