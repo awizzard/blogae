@@ -1,0 +1,12 @@
+<div class="jumbotron" style="margin-left: {{ indent }}px">
+<a href="{{ post.get_absolute_url }}">
+<h1>{{ post|title }}</h1>
+</a>
+<p class="text-warning"><a href="{% url 'author' author=post.author %}">{{ post.author }}</a> replied to <a href="{% url 'post' slug=post.previous.slug %}">{{ post.previous }}</a> at {{ post.created }} (<a href="{% url 'root' slug=post.slug %}">root</a>)</p>
+
+<br>
+<p>{{ post.content|linebreaks }}</p>
+<br>
+
+{% include "post/includes/tools.html" with object=post user=user %}
+</div>

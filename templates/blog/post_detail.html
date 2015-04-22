@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ object|title }}{% endblock %}
+{% block content %}
+
+  <div class="container" style="margin: 0 auto;">
+
+      <div class="jumbotron">
+        <a href="{{ object.get_absolute_url }}">
+          <h1>{{ object|title }}</h1>
+        </a>
+        <p class="text-warning">Posted by <a href="{% url 'author' author=object.author.email %}">{{ post.author.email }}</a> at {{ object.created }}</p>
+
+        <br>
+        <p>{{ object.content|linebreaks }}</p>
+        <br>
+
+        <br>
+
+        {% include "blog/includes/tools.html" with object=object %}
+
+      </div>
+        <p>
+            <a class="btn btn-lg btn-primary" href="{% url 'home' %}" role="button">Return to list »</a>
+        </p>
+
+    </div>
+
+{% endblock %}

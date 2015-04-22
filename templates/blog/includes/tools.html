@@ -1,0 +1,13 @@
+<p>
+  {% if user == object.author %}
+      <a class="btn btn-primary" href="{% url 'edit' slug=object.slug %}" role="button">Edit</a>
+  {% endif %}
+  {% if user == object.author or user.is_staff %}
+    {% if object.active %}
+      <a class="btn btn-primary" href="{% url 'hide' slug=object.slug %}" role="button">Hide</a>
+    {% else %}
+      <a class="btn btn-primary" href="{% url 'reveal' slug=object.slug %}" role="button">Reveal</a>
+    {% endif %}
+  {% endif %}
+  <a class="btn btn-primary" href="{% url 'home' %}" role="button">Return to list »</a>
+</p>

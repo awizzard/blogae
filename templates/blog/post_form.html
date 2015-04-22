@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}New Forum Post{% endblock %}
+
+{% block content %}
+<link href="{{ STATIC_URL }}css/signin.css" rel="stylesheet">
+
+<div class="container">
+
+        <form class="form-signin" role="form" action="" method="post">{% csrf_token %}
+        <h2 class="form-signin-heading">
+        {% if previous %}
+            Reply to <a href="{{ previous.get_absolute_url }}" target="blank">{{ previous }}</a>
+        {% else %}
+            {{ title }}
+        {% endif %}
+        </h2>
+            {% for field in form %}
+            {{ field }}
+            {{ field.errors }}
+            {% endfor %}
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+      </form>
+
+</div>
+{% endblock %}
