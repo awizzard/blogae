@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from .shortcuts import short_slugify, delete_image, not_implemented
+from .shortcuts import short_slugify, not_implemented
 from .managers import ContentManager
 from .constants import *
 
@@ -16,20 +16,6 @@ class TimeStampedModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class Link(TimeStampedModel):
-    """
-    Abstract class for hosted external URLs.
-    """
-    title = models.CharField(max_length=MAX_TITLE_LENGTH)
-    url = models.URLField()
-
-    class Meta:
-        abstract = True
-
-    def __unicode__(self):
-        return self.title
 
 
 class Content(TimeStampedModel):
@@ -73,39 +59,3 @@ class Content(TimeStampedModel):
         ordering = ['-created']
         get_latest_by = "created"
 
-
-class ImageSwappingModel(models.Model):
-    """
-    An abstract base class model for handling
-    the deletion of old image data on replcement.
-    """
-
-    # override with suitable image handling field
-    @not_implemented
-    def image(self):
-        pass
-
-    __original_image = None
-
-
-    def __init__(self, *args, **kwargs):
-        super(ImageSwappingModel, self).__init__(*args, **kwargs)
-        self.__original_image = self.image
-
-    def save(self, *args, **kwargs):
-
-        # delete image file if image has changed
-        if (
-            self.image != self.__original_image
-        ) and (
-            self.__original_image != ''
-        ):
-            delete_image(self.__original_image)
-
-        super(ImageSwappingModel, self).save(*args, **kwargs)
-
-        # update original image with new path
-        self.__original_image = self.image
-
-    class Meta:
-        abstract = True
