@@ -188,7 +188,10 @@ class PostLatestView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         try:
-            post = self.model.objects.are_active().latest()
+            if self.request.user.is_staff:
+                post = self.model.objects.latest()
+            else:
+                post = self.model.objects.are_active().latest()
         except self.model.DoesNotExist:
             return reverse('home')
         else:        
