@@ -14,19 +14,20 @@
           {% include "core/includes/search.html" %}
           <p>
           <a class="btn btn-lg btn-success" href="{% url 'new' %}" role="button">Create New Post</a>
-          <a class="btn btn-lg btn-success" href="{% url 'home' %}" role="button">View All Posts</a>
+          {% if posts %}
+            <a class="btn btn-lg btn-success" href="{% url 'home' %}" role="button">View All Posts</a>
+            <a class="btn btn-lg btn-success" href="{% url 'latest' %}" role="button">Latest</a>
+          {% endif %}
           </p>
               <div class="row marketing">
     <hr>          
     {% for post in object_list %}
-      {% if user.is_staff or post.active %}
         <div class="col-lg">
           <h4><a href="{{ post.get_absolute_url }}">
               {% if not post.active %}<del>{% endif %}{{ post|title }}{% if not post.active %}</del>{% endif %}
           </a></h4><i>Posted by <a href="{% url 'author' author=post.author.email %}">{{ post.author.email }}</a> {{ post.created }}</i>
           <p>{{ post.content|linebreaks }}</p>
         </div>
-        {% endif %}
         <br>
     {% endfor %}
     </div>

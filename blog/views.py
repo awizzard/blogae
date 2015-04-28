@@ -48,6 +48,17 @@ class PostListView(
         else:
             return "All Posts"
 
+    @property 
+    def context_posts(self):
+        return self.get_queryset().exists()
+
+    def get_queryset(self):
+        qs = super(PostListView, self).get_queryset()
+        if self.request.user.is_staff:
+            return qs
+        else:
+            return qs.are_active()
+
 
 class PostDetailView(DetailView):
 
