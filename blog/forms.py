@@ -10,8 +10,8 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = models.Post
         widgets = {
-            'title' : forms.TextInput(attrs = {'placeholder': 'Snappy title'}),
-            'content': forms.Textarea(attrs = {'placeholder': 'Say something...'}),
+            'title' : forms.TextInput(attrs={'placeholder': 'Snappy title'}),
+            'content': forms.Textarea(attrs={'placeholder': 'Say something...'}),
             'author': forms.HiddenInput(),
         }
         fields = ('title', 'content', 'author')

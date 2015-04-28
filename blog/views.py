@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.conf import settings 
+from django.contrib.messages.views import SuccessMessageMixin
 
 from vanilla import ListView, DetailView, CreateView, UpdateView, RedirectView, TemplateView
 from braces.views import LoginRequiredMixin
@@ -53,10 +54,6 @@ class PostDetailView(DetailView):
     model = models.Post
     lookup_field = "slug"
 
-    def get_context_data(self, **kwargs):
-        context = super(PostDetailView, self).get_context_data(**kwargs)
-        return context
-
     def get_object(self):
         queryset = self.get_queryset()
         slug = self.kwargs[self.lookup_field]
@@ -75,11 +72,15 @@ class PostDetailView(DetailView):
 
 class PostCreateView(
     LoginRequiredMixin, 
+    SuccessMessageMixin,
+    core_views.ContextVariableMixin,
     core_views.AuthoredMixin, 
     CreateView
 ):
 
     model = models.Post
+    success_message = "Post created!"
+    context_title = "New Post"
 
     def get_success_url(self):
         return self.object.get_absolute_url()
@@ -87,34 +88,28 @@ class PostCreateView(
     def get_form_class(self):
         return forms.PostForm
 
-    def get_context_data(self, **kwargs):
-        context = super(PostCreateView, self).get_context_data(**kwargs)
-        context['title'] = "New Post"
-        return context
-
     def form_valid(self, form):
         return super(PostCreateView, self).form_valid(form)
 
     def get_login_url(self):
-        return users.create_login_url(reverse('new_post'))
+        return users.create_login_url(reverse('new'))
 
 
 class PostUpdateView(
-    LoginRequiredMixin, 
+    LoginRequiredMixin,
+    SuccessMessageMixin,  
+    core_views.ContextVariableMixin,
     UpdateView
 ):
 
     model = models.Post
     lookup_field = "slug"
     form_class = forms.PostForm
+    success_message = "Post updated!"
+    context_title = "Edit Post"
 
     def get_success_url(self):
         return self.object.get_absolute_url()
-
-    def get_context_data(self, **kwargs):
-        context = super(PostUpdateView, self).get_context_data(**kwargs)
-        context['title'] = "Edit Post"
-        return context
 
     def get_login_url(self):
         return users.create_login_url(
@@ -131,15 +126,17 @@ class AuthoredView(PostListView):
         "title": "icontains",
     }
 
-    def get_context_data(self, **kwargs):
+    @property 
+    def context_head(self):
+        return "Posts by {}".format(self.kwargs['author'])
+
+    @property
+    def context_lead(self):
         q = self.request.GET.get("q")
-        context = super(AuthoredView, self).get_context_data(**kwargs)
-        context['head'] = "Posts by {}".format(self.kwargs['author'])
-        context['lead'] = "Posts created by {}{}.".format(
+        return "Posts created by {}{}.".format(
             self.kwargs['author'],
             " matching `{}`".format(q) if q else '' 
         )
-        return context
 
     def get_queryset(self):
         qs = super(AuthoredView, self).get_queryset()
@@ -171,3 +168,16 @@ class PostRevealView(RedirectView):
         post.active = True
         post.save()
         return post.get_absolute_url()
+
+
+class PostLatestView(core_views.LatestMixin, RedirectView):
+
+    permanent = False
+    model = models.Post
+
+    def get_redirect_url(self, *args, **kwargs):
+        post = self.get_object()
+        if post is not None:
+            return post.get_absolute_url()
+        else:
+            return reverse('home')

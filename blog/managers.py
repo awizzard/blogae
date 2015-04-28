@@ -5,6 +5,7 @@ from core.managers import *
 class PostQuerySet(ContentQuerySet):
     pass
 
+
 class PostManager(ContentManager):
 
     def get_queryset(self):

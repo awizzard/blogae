@@ -111,3 +111,9 @@ class AuthoredMixin(object):
         if hasattr(form, "instance"):
             form.instance.author = self.request.user
         return super(AuthoredMixin, self).form_valid(form)
+
+
+class LatestMixin(object):
+
+    def get_object(self, queryset=None):
+        return self.model.objects.latest()

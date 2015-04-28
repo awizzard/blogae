@@ -10,9 +10,14 @@ urlpatterns = patterns('',
         name="home",
     ),
     url(
+        regex=r'^latest/$',
+        view=views.PostLatestView.as_view(),
+        name="latest",
+    ),
+    url(
         regex=r'^new/$',
         view=views.PostCreateView.as_view(),
-        name="new_post",
+        name="new",
     ),
     url(
         regex=r'^(?P<slug>[\w-]+)/edit/$',
@@ -39,4 +44,5 @@ urlpatterns = patterns('',
         view=views.PostDetailView.as_view(),
         name="post",
     ),
+
 )
