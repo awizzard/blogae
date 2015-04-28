@@ -170,14 +170,15 @@ class PostRevealView(RedirectView):
         return post.get_absolute_url()
 
 
-class PostLatestView(core_views.LatestMixin, RedirectView):
+class PostLatestView(RedirectView):
 
     permanent = False
     model = models.Post
 
     def get_redirect_url(self, *args, **kwargs):
-        post = self.get_object()
-        if post is not None:
-            return post.get_absolute_url()
-        else:
+        try:
+            post = self.model.objects.are_active().latest()
+        except self.model.DoesNotExist:
             return reverse('home')
+        else:        
+            return post.get_absolute_url()
