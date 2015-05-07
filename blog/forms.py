@@ -20,3 +20,9 @@ class PostForm(forms.ModelForm):
         super(PostForm, self).__init__(*args, **kwargs)
         for _, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+
+
+class ReplyForm(PostForm):
+
+    class Meta(PostForm.Meta):
+        fields = ('content', 'author')

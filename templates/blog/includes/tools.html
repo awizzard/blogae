@@ -1,4 +1,5 @@
 <p>
+  <a class="btn btn-primary" href="{% url 'reply' reply=object.slug %}" role="button">Reply</a>
   {% if user == object.author %}
       <a class="btn btn-primary" href="{% url 'edit' slug=object.slug %}" role="button">Edit</a>
   {% endif %}

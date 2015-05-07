@@ -6,9 +6,9 @@
 
       <div class="jumbotron">
         <a href="{{ object.get_absolute_url }}">
-          <h1>{{ object|title }}</h1>
+          <h1>{% if not object.active %}<del>{% endif %}{{ object|title }}{% if not object.active %}</del>{% endif %}</h1>
         </a>
-        <p class="text-warning">Posted by <a href="{% url 'author' author=object.author.email %}">{{ post.author.email }}</a> at {{ object.created }}</p>
+        <p class="text-warning">Posted {% if not object.original %}as a <a href="{% url 'post' slug=object.previous.slug %}">reply</a> {% endif %}by <a href="{% url 'author' author=object.author.email %}">{{ object.author.email }}</a> at {{ object.created }}{% if not object.original %} (<a href="{% url 'root' slug=object.slug %}">root</a>){% endif %}</p>
 
         <br>
         <p>{{ object.content|linebreaks }}</p>
@@ -16,9 +16,16 @@
 
         <br>
 
-        {% include "blog/includes/tools.html" with object=object %}
+        {% include "blog/includes/tools.html" with object=object user=user %}
 
       </div>
+
+      {% for reply in replies %}
+        {% if user.is_staff or reply.active %}
+          {% include include_template with user=user post=reply include_template=include_template indent=50 only %}
+        {% endif %}
+      {% endfor %}
+
         <p>
             <a class="btn btn-lg btn-primary" href="{% url 'home' %}" role="button">Return to list »</a>
         </p>

@@ -40,6 +40,16 @@ urlpatterns = patterns('',
         name="reveal",
     ),
     url(
+        regex=r'^(?P<reply>[\w-]+)/reply/$',
+        view=views.PostReplyView.as_view(),
+        name="reply",
+    ),
+    url(
+        regex=r'^(?P<slug>[\w-]+)/root/$',
+        view=views.PostRootView.as_view(),
+        name="root",
+    ),
+    url(
         regex=r'^(?P<slug>[\w-]+)/$',
         view=views.PostDetailView.as_view(),
         name="post",

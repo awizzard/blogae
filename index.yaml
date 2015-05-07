@@ -56,6 +56,24 @@ indexes:
 
 - kind: blog_post
   properties:
+  - name: author_id
+  - name: previous_id
+  - name: created
+    direction: desc
+
+- kind: blog_post
+  properties:
+  - name: previous_id
+  - name: created
+
+- kind: blog_post
+  properties:
+  - name: previous_id
+  - name: created
+    direction: desc
+
+- kind: blog_post
+  properties:
   - name: title
   - name: created
     direction: desc

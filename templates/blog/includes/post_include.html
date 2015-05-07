@@ -1,12 +1,20 @@
 <div class="jumbotron" style="margin-left: {{ indent }}px">
 <a href="{{ post.get_absolute_url }}">
-<h1>{{ post|title }}</h1>
+<h1>{% if not post.active %}<del>{% endif %}{{ post|title }}{% if not post.active %}</del>{% endif %}</h1>
 </a>
-<p class="text-warning"><a href="{% url 'author' author=post.author %}">{{ post.author }}</a> replied to <a href="{% url 'post' slug=post.previous.slug %}">{{ post.previous }}</a> at {{ post.created }} (<a href="{% url 'root' slug=post.slug %}">root</a>)</p>
+<p class="text-warning"><a href="{% url 'author' author=post.author.email %}">{{ post.author.email }}</a> replied to <a href="{% url 'post' slug=post.previous.slug %}">{{ post.previous }}</a> at {{ post.created }} (<a href="{% url 'root' slug=post.slug %}">root</a>)</p>
 
 <br>
 <p>{{ post.content|linebreaks }}</p>
 <br>
 
-{% include "post/includes/tools.html" with object=post user=user %}
+{% include "blog/includes/tools.html" with object=post user=user %}
 </div>
+
+{% for reply in post.replies %}
+{% if user.is_staff or reply.active %}
+  {% with indent=indent|add:"50" %}
+    {% include include_template with post=reply include_template=include_template indent=indent user=user only %}
+  {% endwith %}
+{% endif %}
+{% endfor %}

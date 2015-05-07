@@ -55,15 +55,23 @@ class PostListView(
     def get_queryset(self):
         qs = super(PostListView, self).get_queryset()
         if self.request.user.is_staff:
-            return qs
+            return qs.originals()
         else:
-            return qs.are_active()
+            return qs.originals().are_active()
 
 
-class PostDetailView(DetailView):
+class PostDetailView(
+    core_views.ContextVariableMixin,
+    DetailView
+):
 
     model = models.Post
     lookup_field = "slug"
+    context_include_template = "blog/includes/post_include.html"
+
+    @property 
+    def context_replies(self):
+        return self.object.replies.select_related()
 
     def get_object(self):
         queryset = self.get_queryset()
@@ -79,6 +87,17 @@ class PostDetailView(DetailView):
             slug=slug,
             active=True
         )
+
+
+class PostRootView(RedirectView):
+
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        post = get_object_or_404(models.Post, slug=self.kwargs['slug'])
+        while post.previous is not None:
+            post = post.previous
+        return post.get_absolute_url()
 
 
 class PostCreateView(
@@ -104,6 +123,35 @@ class PostCreateView(
 
     def get_login_url(self):
         return users.create_login_url(reverse('new'))
+
+
+class PostReplyView(PostCreateView):
+
+    context_title = "New Reply"
+
+    def get_success_url(self):
+        return self.context_previous.get_absolute_url()
+    
+    def get_form_class(self):
+        return forms.ReplyForm
+
+    @property
+    def context_previous(self):
+        if not hasattr(self, '_previous'):
+            self._previous = get_object_or_404(self.model, slug=self.kwargs['reply'])
+        return self._previous
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            form.instance.title = "re: {title}{count}".format(
+                title=self.context_previous.title,
+                count=" ({})".format(
+                    self.context_previous.replies.count()
+                ) if self.context_previous.replies.exists() else "" 
+            )
+            form.instance.previous = self.context_previous
+            form.save()
+        return super(PostReplyView, self).form_valid(form)
 
 
 class PostUpdateView(
