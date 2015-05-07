@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.conf import settings 
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponse
 
 from vanilla import ListView, DetailView, CreateView, UpdateView, RedirectView, TemplateView
 from braces.views import LoginRequiredMixin

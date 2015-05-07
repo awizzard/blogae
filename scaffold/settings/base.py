@@ -44,7 +44,7 @@ DEFAULT_APPS = (
 THIRD_PARTY_APPS = (
     'braces',
     'djangosecure',
-    'csp',
+    # 'csp',
     'cspreports',
     'djangae.contrib.gauth',
     'djangae.contrib.security',
@@ -64,7 +64,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'djangae.contrib.gauth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'csp.middleware.CSPMiddleware',
+    # 'csp.middleware.CSPMiddleware',
     'session_csrf.CsrfMiddleware',
     'djangosecure.middleware.SecurityMiddleware',
 )
@@ -127,7 +127,7 @@ CSP_DEFAULT_SRC = ("'self'", "*.gstatic.com")
 CSP_STYLE_SRC = ("'self'", "fonts.googleapis.com", "*.gstatic.com")
 CSP_FONT_SRC = ("'self'", "themes.googleusercontent.com", "*.gstatic.com")
 CSP_FRAME_SRC = ("'self'", "www.google.com", "www.youtube.com", "accounts.google.com", "apis.google.com", "plus.google.com")
-CSP_SCRIPT_SRC = ("'self'", "*.googleanalytics.com", "*.google-analytics.com", "ajax.googleapis.com")
+CSP_SCRIPT_SRC = ("'self'", "code.jquery.com", "*.googleanalytics.com", "*.google-analytics.com", "ajax.googleapis.com")
 CSP_IMG_SRC = ("'self'", "data:", "s.ytimg.com", "*.googleusercontent.com", "*.gstatic.com")
 CSP_CONNECT_SRC = ("'self'", "plus.google.com", "www.google-analytics.com")
 
