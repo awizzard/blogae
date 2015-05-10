@@ -7,11 +7,13 @@ from django.http import HttpResponse, Http404
 from vanilla import ListView, DetailView, CreateView, UpdateView, RedirectView, TemplateView
 from braces.views import LoginRequiredMixin
 from termsearch.views import TermSearchMixin
+from rest_framework import generics
 
 from core import views as core_views
 
 from . import models
 from . import forms
+from . import serializers
 
 from google.appengine.api import users
 
@@ -261,3 +263,15 @@ class PostRandomView(core_views.RandomObjectMixin, RedirectView):
             return post.get_absolute_url()
         else:
             return reverse('home')
+
+
+class PostCollection(generics.ListAPIView):
+    
+    queryset = models.Post.objects.all()
+    serializer_class = serializers.PostSerializer
+
+
+class PostMember(generics.RetrieveUpdateDestroyAPIView):
+    
+    queryset = models.Post.objects.all()
+    serializer_class = serializers.PostMemberSerializer

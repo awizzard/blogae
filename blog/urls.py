@@ -25,6 +25,16 @@ urlpatterns = patterns('',
         name="random",
     ),
     url(
+        regex=r'^api/posts/$', 
+        view=views.PostCollection.as_view(),
+        name="api_collection",
+    ),
+    url(
+        regex=r'^api/posts/(?P<pk>[0-9]+)/$',
+        view=views.PostMember.as_view(),
+        name="api_member",
+    ),
+    url(
         regex=r'^(?P<slug>[\w-]+)/edit/$',
         view=views.PostUpdateView.as_view(),
         name="edit",

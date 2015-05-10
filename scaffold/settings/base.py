@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = (
     'djangae.contrib.security',
     'crispy_forms',
     'widget_tweaks',
+    'rest_framework',
 )
 
 LOCAL_APPS = (
