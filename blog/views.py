@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.conf import settings 
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 from vanilla import ListView, DetailView, CreateView, UpdateView, RedirectView, TemplateView
 from braces.views import LoginRequiredMixin
@@ -61,10 +61,7 @@ class PostListView(
             return qs.originals().are_active()
 
 
-class PostDetailView(
-    core_views.ContextVariableMixin,
-    DetailView
-):
+class PostDetailView(core_views.ContextVariableMixin, DetailView):
 
     model = models.Post
     lookup_field = "slug"
@@ -245,3 +242,22 @@ class PostLatestView(RedirectView):
             return reverse('home')
         else:        
             return post.get_absolute_url()
+
+
+class PostRandomView(core_views.RandomObjectMixin, RedirectView):
+
+    permanent = False
+    model = models.Post
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return self.model.objects.originals()
+        else:
+            return self.model.objects.originals().are_active()
+
+    def get_redirect_url(self, *args, **kwargs):
+        post = self.get_object(self.get_queryset())
+        if post:
+            return post.get_absolute_url()
+        else:
+            return reverse('home')

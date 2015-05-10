@@ -20,6 +20,11 @@ urlpatterns = patterns('',
         name="new",
     ),
     url(
+        regex=r'^random/$',
+        view=views.PostRandomView.as_view(),
+        name="random",
+    ),
+    url(
         regex=r'^(?P<slug>[\w-]+)/edit/$',
         view=views.PostUpdateView.as_view(),
         name="edit",

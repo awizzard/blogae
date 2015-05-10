@@ -6,6 +6,7 @@ from django.http import Http404, HttpResponse
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
+from django.db import NotSupportedError
 
 from .shortcuts import not_implemented, is_array
 
@@ -92,11 +93,16 @@ class RandomObjectMixin(object):
         if queryset is None:
             queryset = self.get_queryset()
         try:
-            obj = queryset.order_by('?')[0]
+            return queryset.order_by('?')[0]
+        except NotSupportedError:
+            if queryset:
+                import random
+                return random.choice(queryset)
+            else:
+                return queryset.none()
         except (ObjectDoesNotExist, IndexError):
             return queryset.none()
-        return obj
-
+            
 
 class ActiveMixin(object):
 
